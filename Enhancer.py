@@ -42,6 +42,7 @@ def main():
     contrast = float(input("input contrast: "))
 
     for img in listdir(Ref_Loc):
+          print(img)
           curr = Image.open(Ref_Loc + '/' + img)
           curr.show()
           new_image = enhancer(curr, brightness, sharpness, contrast)
