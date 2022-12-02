@@ -47,7 +47,7 @@ def main():
           curr.show()
           new_image = enhancer(curr, brightness, sharpness, contrast)
           new_image.show()
-         
+          new_image=new_image.save(Enh_Loc + "/" + img, "JPEG")
           
           
 if __name__ == "__main__":
