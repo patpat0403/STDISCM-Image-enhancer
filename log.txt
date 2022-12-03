@@ -1,3 +1,3 @@
-Total time taken : 8.9503.4f 
+Total time taken : 4.6024 
 Total number of images enhanced: 5 
-Enhanced Images Location : e:\Users\Ivan\Documents\School_Doc\College\STDISCM\ParallelProj\STDISCM-Image-enhancer\Enhanced images\
+Enhanced Images Location : Enhanced images\

@@ -19,7 +19,7 @@ class enhancer(multiprocessing.Process):
 
     def enhance(self):
         #change brightness first
-        print(self.pid)
+        # print(self.pid)
         while(self.remainingItems.value > 0):
             img , img_name = self.queue.get()
             newImage = ImageEnhance.Brightness(img).enhance(self.brightness)
@@ -30,7 +30,7 @@ class enhancer(multiprocessing.Process):
                 self.ctr.value += 1
             with self.remainingItems.get_lock():
                 self.remainingItems.value -= 1
-            print(self.remainingItems.value)
+            # print(self.remainingItems.value)
             newImage.show()
 
             # self.close()
@@ -54,6 +54,7 @@ class ImageGetter(multiprocessing.Process):
             fname = self.flist.pop()
             img = Image.open(self.path + '\\' + fname)
             self.queue.put([img,fname])
+            print(len(self.flist))
             # print("a")
             # img.show()
         self.close()
@@ -63,31 +64,31 @@ def main():
 
     dirname = os.path.dirname(__file__)
 
-    Ref_Loc = os.path.join(dirname, 'Reference images\\')
-    Enh_Loc = os.path.join(dirname, 'Enhanced images\\')
+    # Ref_Loc = os.path.join(dirname, 'Reference images\\')
+    # Enh_Loc = os.path.join(dirname, 'Enhanced images\\')
+    # Ref_Loc = os.path.join(dirname, 'Reference images\\')
+    # Enh_Loc = os.path.join(dirname, 'Enhanced images\\')
+    # duration = 5
+    # process_count = 3
+    # brightness = 1.5
+    # sharpness = 1.2
+    # contrast = 1.1
 
-    # Ref_Loc = input("Location of Images: ")
 
-    # Enh_Loc = input("Location of Enhanced Images: ")
-    #Enhancing time in units
-    # duration = int(input("input time: "))
-    # #Brightness
-    # brightness= float(input("input brightness: "))
-    # #sharpness
-    # sharpness= float (input("input sharpness: "))
-    # #contrast
-    # contrast = float(input("input contrast: "))
+    Ref_Loc = input("Location of Images: ")
 
-    # process_count = int(input("input process count: "))
+    Enh_Loc = input("Location of Enhanced Images: ")
+    # Enhancing time in units
+    duration = int(input("input time: "))
+    #Brightness
+    brightness= float(input("input brightness: "))
+    #sharpness
+    sharpness= float (input("input sharpness: "))
+    #contrast
+    contrast = float(input("input contrast: "))
+
+    process_count = int(input("input process count: "))
     dirname = os.path.dirname(__file__)
-
-    Ref_Loc = os.path.join(dirname, 'Reference images\\')
-    Enh_Loc = os.path.join(dirname, 'Enhanced images\\')
-    duration = 5
-    process_count = 3
-    brightness = 1.5
-    sharpness = 1.2
-    contrast = 1.1
 
     g_processes = []
     e_processes = []
