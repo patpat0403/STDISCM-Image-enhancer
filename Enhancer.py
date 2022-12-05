@@ -62,32 +62,29 @@ class ImageGetter(multiprocessing.Process):
 
 def main():
 
-    dirname = os.path.dirname(__file__)
+    # dirname = os.path.dirname(__file__)
 
-    Ref_Loc = os.path.join(dirname, 'Reference images\\')
-    Enh_Loc = os.path.join(dirname, 'Enhanced images\\')
+    # Ref_Loc = os.path.join(dirname, 'Reference images\\')
+    # Enh_Loc = os.path.join(dirname, 'Enhanced images\\')
 
-    duration = 5
-    process_count = 3
-    brightness = 1.5
-    sharpness = 1.2
-    contrast = 1.1
-    
+    # duration = 5
+    # process_count = 3
+    # brightness = 1.5
+    # sharpness = 1.2
+    # contrast = 1.1
 
-    # Ref_Loc = input("Location of Images: ")
 
-    # Enh_Loc = input("Location of Enhanced Images: ")
-    # # Enhancing time in units
-    # duration = int(input("input time: "))
-    # #Brightness
-    # brightness= float(input("input brightness: "))
-    # #sharpness
-    # sharpness= float (input("input sharpness: "))
-    # #contrast
-    # contrast = float(input("input contrast: "))
-
-    # process_count = int(input("input process count: "))
-    dirname = os.path.dirname(__file__)
+    Ref_Loc = input("Location of Images: ")
+    Enh_Loc = input("Location of Enhanced Images: ")
+    # Enhancing time in units
+    duration = int(input("input time: "))
+    #Brightness
+    brightness= float(input("input brightness: "))
+    #sharpness
+    sharpness= float (input("input sharpness: "))
+    #contrast
+    contrast = float(input("input contrast: "))
+    process_count = int(input("input process count: "))
 
     g_processes = []
     e_processes = []
