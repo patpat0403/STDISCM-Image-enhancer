@@ -1,2 +1,2 @@
-Total time taken : 15.6826 
+Total time taken : 7.6117 
 Enhanced Images Location : Enhanced images\

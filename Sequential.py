@@ -5,7 +5,7 @@ from os import listdir
 import matplotlib.pyplot as plt
 import multiprocessing
 import time
-
+from queue import Queue
 class enhancer(multiprocessing.Process):
     def __init__(self, enh_loc, ctr, queue, remainingItems, brightness = 1.5, sharpness = 1.5, contrast = 1.5):
         multiprocessing.Process.__init__(self)
@@ -62,18 +62,6 @@ class ImageGetter(multiprocessing.Process):
 
 def main():
 
-    dirname = os.path.dirname(__file__)
-
-    Ref_Loc = os.path.join(dirname, 'Reference images\\')
-    Enh_Loc = os.path.join(dirname, 'Enhanced images\\')
-
-    duration = 5
-    process_count = 3
-    brightness = 1.5
-    sharpness = 1.2
-    contrast = 1.1
-    
-
     # Ref_Loc = input("Location of Images: ")
 
     # Enh_Loc = input("Location of Enhanced Images: ")
@@ -85,60 +73,50 @@ def main():
     # sharpness= float (input("input sharpness: "))
     # #contrast
     # contrast = float(input("input contrast: "))
-
-    # process_count = int(input("input process count: "))
     dirname = os.path.dirname(__file__)
+
+    dirname = os.path.dirname(__file__)
+
+    Ref_Loc = os.path.join(dirname, 'Reference images\\')
+    Enh_Loc = os.path.join(dirname, 'Enhanced images\\')
+    duration = 5
+    process_count = 3
+    brightness = 1.5
+    sharpness = 1.2
+    contrast = 1.1
 
     g_processes = []
     e_processes = []
-    counter = 0;
-    with multiprocessing.Manager() as manager:
-        t_start = time.time()
-        image_queue = multiprocessing.Queue()
-        image_sem = multiprocessing.Semaphore(process_count)
+    counter = 0
 
-        flist = (listdir(Ref_Loc))
-        file_list = manager.list(flist)
-        counter = multiprocessing.Value('i', 0)
-        remainingItems = multiprocessing.Value('i', len(flist))
-        q_done = False
-        file_sem = multiprocessing.Semaphore(process_count)
-        notDone = True
-        print(flist)
-        while(time.time() < t_start + duration * 60 and notDone): 
-            while(len(file_list) > 0):
-                while(len(g_processes) < process_count):
-                    file_sem.acquire()
-                    p = ImageGetter(path = Ref_Loc, queue= image_queue, flist = file_list)
-                    p.start()
-                    g_processes.append(p)
-                    print("g")
-                    file_sem.release()
+    flist = (listdir(Ref_Loc))
+    file_list = flist
+    notDone = True
+    print(flist)
 
-                # if(len(file_list) == 0):
-                #     q_done = True
-                # print("Here")
+    queue = Queue()
+    t_start = time.time()
+    while(len(file_list) > 0):
+        fname = flist.pop()
+        img = Image.open(Ref_Loc + '\\' + fname)
+        queue.put([img,fname])
+        print(len(flist))
+        print("g")
 
-            while(not image_queue.empty()):
-                while(len(e_processes) < process_count):
-                    image_sem.acquire()
-                    p = enhancer(enh_loc= Enh_Loc, ctr = counter, queue= image_queue, remainingItems = remainingItems, brightness= brightness, sharpness= sharpness, contrast= contrast)
-                    p.start()
-                    e_processes.append(p)
-                    print("e")
-                    image_sem.release()
-                if(image_queue.empty()):
-                    # print("here")
-                    q_done = False
-                    notDone = False
+        # if(len(file_list) == 0):
+        #     q_done = True
+        # print("Here")
 
-    for process in g_processes:
-        process.join()
-    # print("G")
-    for process in e_processes: 
-        process.join()
-    # print("E")
-
+    while(not queue.empty()):
+        img , img_name = queue.get()
+        newImage = ImageEnhance.Brightness(img).enhance(brightness)
+        newImage = ImageEnhance.Sharpness(newImage).enhance(sharpness)
+        newImage = ImageEnhance.Contrast(newImage).enhance(contrast)
+        newImage.save(Enh_Loc + "/" + img_name, "JPEG")
+        # print(self.remainingItems.value)
+        newImage.show()
+        print("e")
+        
 
     t_end = time.time()
     t_total = t_end - t_start
@@ -146,9 +124,9 @@ def main():
 
     # print(t_total)
     # print(counter.value)
-    with open("log_par.txt", "w") as f:
+    with open("log_seq.txt", "w") as f:
         f.write("Total time taken : {:.4f} \n".format(t_total))
-        f.write("Total number of images enhanced: {0} \n".format(counter.value))
+        # f.write("Total number of images enhanced: {0} \n".format(value))
         f.write("Enhanced Images Location : {0}".format(Enh_Loc))
         f.close()
 
